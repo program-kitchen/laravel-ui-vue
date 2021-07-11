@@ -7,56 +7,169 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Laravel-Vueの環境
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+本プロジェクトはdevelopブランチに環境が作られています。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+すぐ環境を使いたい場合はdevelopブランチを利用ください。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## LaravelでVue利用のセッティング
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+LaravelにVueを導入し、Bladeに組み込んだりする方法を記載します。
 
-## Laravel Sponsors
+大まかな手順は下記となります。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- Laravelのインストール
+- Laravel-uiの導入
+- Vueの導入
+- Laravel Mixの導入
 
-### Premium Partners
+## 必要環境
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+下記は事前にインストールしておいてください。
 
-## Contributing
+- php
+- Composer
+- DB環境(MySQLなど)
+- node
+- npm
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Laravelのインストール
 
-## Code of Conduct
+下記コマンドでプロジェクトを作成する
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+composer create-project laravel/laravel [プロジェクト名] --prefer-dist
+```
 
-## Security Vulnerabilities
+## Laravel-uiのインストール
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+下記コマンドでLaravel-uiをインストールします
 
-## License
+```
+composer require laravel/ui
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Vueのインストール
+
+Laravel-uiがインストールされたので、Vueを導入します
+
+```
+php artisan ui vue
+```
+
+※もし、認証機能も一緒に入れたい場合は `--auth` オプションをつけると認証機能も合わせて導入されます。
+
+すでにLaravelをインストールした際に、package.jsonがあるため、そこにVueの記載が出来上がります。
+
+## Laravel Mixの導入
+
+Laravel Mixとは、フロントのアセットをコンパイルするツールのことです。
+
+デフォルトのpackage.jsonファイルには、Laravel Mixの使用を開始するために必要なすべてのものがすでに含まれています。
+
+先程のVueインストールで、この中にVueの導入も含まれるようになったので、下記コマンドでインストールを実施しましょう。
+
+```
+npm install
+```
+
+Vueはコンパイルで使用ができるようになります(Webpack)
+
+Laravel Mixを使うことで簡単にWebpackを使うことができるようになっています。
+
+
+そのため、下記コマンドで全てのMixタスクの実行(コンパイル)を実施しましょう。
+
+resourcesディレクトリ以下のファイルがコンパイルされます。
+
+```
+npm run dev
+```
+
+本番環境とかに上げる前は必ず下記を実行しましょう。(圧縮)
+
+```
+npm run prod
+```
+
+アセットの変更を監視しながらの場合は下記コマンドを実行します。
+
+```
+npm run watch
+```
+
+
+### コンパイル設定
+
+コンパイルの設定については、`webpack.mix.js` に書かれています。
+
+下記設定によって、`resources/js/app.js'`が`public/js`にコンパイルされたファイルをおくディレクトリになり、`resources/sass/app.scss`が`public/css`にコンパイルされたファイルをおくディレクトリと言った設定になっています。
+
+
+```
+mix.js('resources/js/app.js', 'public/js').vue({ version: 2 })
+    .sass('resources/sass/app.scss', 'public/css')
+    .sourceMaps();
+```
+
+
+### Vueのコンパイル
+
+Laravel Mixでは、vueメソッドを使用することで、Vue単一ファイルコンポーネントのコンパイルサポートに必要なBabelプラグインを自動的にインストールします。
+
+JavaScriptがコンパイルされたら、アプリケーションから参照できるようになります。
+
+```
+<head>
+    <!-- ... -->
+
+    <script src="/js/app.js"></script>
+</head>
+```
+
+
+## Vueの単一ファイルコンポーネントの利用
+
+Vueファイルを利用する場合について明記します。
+
+Vueのサンプルファイルが`resources/js/components`以下に`ExampleComponent.vue`として置かれています。
+
+このディレクトリに置くことで、Laravel Mixのタスク実行で自動的にコンパイルされます。
+
+Bladeファイルで利用するためには、`resources/js/app.js`に以下を追記する必要があります。
+
+```
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+// コンポーネントを作ったら下記にどんどん追記する。
+Vue.component('ケバブケースでの記述', require('./components/vueファイル名').default);
+```
+
+Bladeファイルでは下記のように記述して利用します。
+
+```
+<example-component></example-component>
+```
+
+
+この時、resources/js/app.jsでは、
+```
+const app = new Vue({
+    el: '#app',
+});
+```
+と記載されているため、`id="app"`タグの中でvueファイルを使う必要があります。
+
+Bladeファイルの親を`id="app"`で括ってあげればVueの単一ファイルコンポーネントをどこでも利用できるようになります。
+
+
+## (補足)Bootstrapのインストール
+
+BootstrapもLaravel-uiで簡単に導入できます。
+
+```
+php artisan ui bootstrap
+```
