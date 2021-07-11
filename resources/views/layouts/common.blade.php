@@ -8,23 +8,18 @@
 <link href="../../css/app.css" rel="stylesheet">
 </head>
 <body>
-
 @yield('header')
 
-<div id="app">
+<div id="app" class="h-75">
     <!-- コンテンツ -->
     <div class="main">
         @yield('content')
     </div>
 
     <!-- 共通メニュー -->
-    <div class="sub">
+    <!-- <div class="sub">
         @yield('submenu')
-    </div>
-
-    <div class="vue-file">
-        <example-component></example-component>
-    </div>
+    </div> -->
 </div>
 
 @yield('footer')

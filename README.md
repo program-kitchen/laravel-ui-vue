@@ -173,3 +173,12 @@ BootstrapもLaravel-uiで簡単に導入できます。
 ```
 php artisan ui bootstrap
 ```
+
+
+## サンプルページ
+
+下記ページにVueとBootstrapを使った簡易的ページを作成しています。
+
+APIコールも確認できるようにしています
+
+http://localhost:8000/sample
